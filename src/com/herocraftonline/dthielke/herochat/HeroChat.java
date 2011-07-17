@@ -282,7 +282,7 @@ public class HeroChat extends JavaPlugin {
     }
 
     public void logChat(String msg) {
-        chatLog.info(msg.replaceAll("§[0-9a-f]", ""));
+        chatLog.info(msg);
     }
 
     public ChannelManager getChannelManager() {
