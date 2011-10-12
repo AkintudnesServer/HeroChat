@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dthielke.herochat.HeroChat;
 import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 import com.herocraftonline.dthielke.herochat.channels.Channel;
+import com.onarandombox.MultiverseCore.MVWorld;
 
 public class Messaging {
     private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e", "§2" };
@@ -31,34 +32,42 @@ public class Messaging {
         }
         List<String> censors = plugin.getCensors();
         for (String censor : censors) {
-            String[] split = censor.split(";", 2);
+            String[] split = censor.split(";", 3);
             if (split.length == 1) {
-                msg = censorMsg(msg, censor, false, "");
+                msg = censorMsg(plugin, sender, msg, censor, false, "", ChatColor.RED, channel.getColor());
             } else {
-                msg = censorMsg(msg, split[0], true, split[1]);
+                if (split.length == 3) {
+                    msg = censorMsg(plugin, sender, msg, split[0], true, split[1], ChatColor.valueOf(split[2]), channel.getColor());
+                }
+                else
+                {
+                    msg = censorMsg(plugin, sender, msg, split[0], true, split[1], ChatColor.RED, channel.getColor());
+                }
             }
         }
         String leader = createLeader(plugin, channel, format, sender, receiver, msg, sentByPlayer);
         return leader + msg;
     }
 
-    private static String censorMsg(String msg, String censor, boolean customReplacement, String replacement) {
+//    private static String censorMsg(String msg, String censor, boolean customReplacement, String replacement) {
+  private static String censorMsg(HeroChat plugin, String sender, String msg, String censor, boolean customReplacement, String replacement, ChatColor cencol, ChatColor chancol) {
         Pattern pattern = Pattern.compile(censor, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(msg);
         StringBuilder censoredMsg = new StringBuilder();
         while (matcher.find()) {
             String match = matcher.group();
+            plugin.log(Level.INFO, "Censored \"" + match + "\" for " + sender + "!");
             if (!customReplacement) {
                 char[] replaceChars = new char[match.length()];
                 Arrays.fill(replaceChars, '*');
                 replacement = new String(replaceChars);
             }
-            censoredMsg.append(msg.substring(0, matcher.start()) + replacement);
+            censoredMsg.append(msg.substring(0, matcher.start()) + cencol.str + replacement + chancol.str);
             msg = msg.substring(matcher.end());
             matcher = pattern.matcher(msg);
         }
         censoredMsg.append(msg);
-        
+
         return censoredMsg.toString();
     }
 
@@ -74,12 +83,13 @@ public class Messaging {
             try {
                 Player sender = plugin.getServer().getPlayer(senderName);
                 if (sender != null) {
-                    prefix = plugin.getPermissionManager().getPrefix(sender);
-                    suffix = plugin.getPermissionManager().getSuffix(sender);
+                    //prefix = plugin.getPermissionManager().getPrefix(sender);
+                    //suffix = plugin.getPermissionManager().getSuffix(sender);
                     group = plugin.getPermissionManager().getGroup(sender);
-                    groupPrefix = plugin.getPermissionManager().getGroupPrefix(sender);
-                    groupSuffix = plugin.getPermissionManager().getGroupSuffix(sender);
-                    world = sender.getWorld().getName();
+                    //groupPrefix = plugin.getPermissionManager().getGroupPrefix(sender);
+                    groupPrefix = plugin.getChannelManager().getChannel(group).getNickColor().str;
+                    //groupSuffix = plugin.getPermissionManager().getGroupSuffix(sender);
+                    world = getWorld(sender);
                     senderName = sender.getDisplayName();
                     healthBar = createHealthBar(sender);
                 }
@@ -115,6 +125,16 @@ public class Messaging {
         }
 
         return leader;
+    }
+
+    private static String getWorld(Player sender) {
+        if (HeroChat.getMultiverseCore() != null) {
+            MVWorld world = HeroChat.getMultiverseCore().getMVWorld(sender.getWorld().getName());
+            if(world != null) {
+                return world.getColoredWorldString();
+            }
+        }
+        return sender.getWorld().getName();
     }
 
     private static String createHealthBar(Player player) {
