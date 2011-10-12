@@ -79,6 +79,7 @@ public class Messaging {
         String groupSuffix = "";
         String world = "";
         String healthBar = "";
+        Channel groupChan;
         if (sentByPlayer) {
             try {
                 Player sender = plugin.getServer().getPlayer(senderName);
@@ -87,7 +88,12 @@ public class Messaging {
                     //suffix = plugin.getPermissionManager().getSuffix(sender);
                     group = plugin.getPermissionManager().getGroup(sender);
                     //groupPrefix = plugin.getPermissionManager().getGroupPrefix(sender);
-                    groupPrefix = plugin.getChannelManager().getChannel(group).getNickColor().str;
+                    groupChan = plugin.getChannelManager().getChannel(group);
+                    if (groupChan == null) {
+                        groupPrefix = ChatColor.WHITE.str;
+                    } else {
+                        groupPrefix = groupChan.getNickColor().str;
+                    }
                     //groupSuffix = plugin.getPermissionManager().getGroupSuffix(sender);
                     world = getWorld(sender);
                     senderName = sender.getDisplayName();
