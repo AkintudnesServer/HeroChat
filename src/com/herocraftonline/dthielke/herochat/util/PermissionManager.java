@@ -10,7 +10,8 @@ package com.herocraftonline.dthielke.herochat.util;
 
 import org.bukkit.entity.Player;
 
-import com.nijiko.permissions.Group;
+//import com.nijiko.permissions.Group;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import com.nijiko.permissions.PermissionHandler;
 
 public class PermissionManager {
@@ -21,6 +22,26 @@ public class PermissionManager {
         this.security = security;
     }
 
+    public String getGroup(Player p) {
+        if (security != null) {
+            try {
+            for (PermissionAttachmentInfo permAttach : p.getEffectivePermissions()) {
+                String perm = permAttach.getPermission();
+                if (!(perm.startsWith("group.") && permAttach.getValue())) {
+                    continue;
+                }
+                return perm.substring(6,7).toUpperCase() + perm.substring(7, perm.length());
+            }
+            return "";
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return "";
+            }
+        } else {
+            return "";
+        }
+    }
+/*
     public String getGroup(Player p) {
         if (security != null) {
             try {
@@ -125,7 +146,7 @@ public class PermissionManager {
             return "";
         }
     }
-
+*/
     public boolean isAdmin(Player p) {
         if (security != null) {
             return security.has(p, "herochat.admin");

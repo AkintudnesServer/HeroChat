@@ -31,6 +31,7 @@ public class Channel {
     protected String password;
     protected String msgFormat;
     protected ChatColor color;
+    protected ChatColor nickcolor;
 
     protected boolean enabled;
     protected boolean verbose;
@@ -224,6 +225,14 @@ public class Channel {
 
     public void setColor(ChatColor color) {
         this.color = color;
+    }
+
+    public ChatColor getNickColor() {
+        return nickcolor;
+    }
+
+    public void setNickColor(ChatColor color) {
+        this.nickcolor = color;
     }
 
     public List<String> getBlacklist() {

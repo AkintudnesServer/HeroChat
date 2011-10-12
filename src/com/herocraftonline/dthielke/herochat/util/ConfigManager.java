@@ -113,6 +113,7 @@ public class ConfigManager {
             c.setNick(config.getString(root + "nickname", "DEFAULT-NICK"));
             c.setPassword(config.getString(root + "password", ""));
             c.setColor(ChatColor.valueOf(config.getString(root + "color", "WHITE")));
+            c.setNickColor(ChatColor.valueOf(config.getString(root + "nickcol", "WHITE")));
             c.setMsgFormat(config.getString(root + "message-format", "{default}"));
             c.setWorlds(config.getStringList(root + "worlds", null));
             
@@ -213,6 +214,7 @@ public class ConfigManager {
             config.setProperty(root + "nickname", c.getNick());
             config.setProperty(root + "password", c.getPassword());
             config.setProperty(root + "color", c.getColor().toString());
+            config.setProperty(root + "nickcol", c.getNickColor().toString());
             config.setProperty(root + "message-format", c.getMsgFormat());
             config.setProperty(root + "worlds", c.getWorlds());
             if (c instanceof LocalChannel) {
