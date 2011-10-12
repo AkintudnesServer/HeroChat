@@ -20,6 +20,8 @@ public class HeroChatServerListener extends ServerListener {
             this.plugin.loadPermissions();
         } else if (name.equals("CraftIRC")) {
             this.plugin.loadCraftIRC();
+        } else if (name.equals("Multiverse-Core")) {
+            this.plugin.loadMultiverse();
         } else if (name.equals("iChat")) {
             this.plugin.issueConflictWarning(plugin);
         } else if (name.equals("EssentialsChat")) {

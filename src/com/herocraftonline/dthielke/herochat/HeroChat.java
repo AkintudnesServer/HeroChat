@@ -57,6 +57,7 @@ import com.herocraftonline.dthielke.herochat.util.ConfigManager;
 import com.herocraftonline.dthielke.herochat.util.PermissionManager;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.onarandombox.MultiverseCore.MultiverseCore;
 
 public class HeroChat extends JavaPlugin {
 
@@ -104,6 +105,7 @@ public class HeroChat extends JavaPlugin {
     private HeroChatPlayerListener playerListener;
     private HeroChatCraftIRCListener craftIRCListener;
     private boolean eventsRegistered = false;
+    private static MultiverseCore multiverseCore = null;
 
     public void onDisable() {
         try {
@@ -114,6 +116,10 @@ public class HeroChat extends JavaPlugin {
         } catch (Exception e) {}
         PluginDescriptionFile desc = getDescription();
         log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " disabled.");
+    }
+    
+    public static MultiverseCore getMultiverseCore() {
+        return multiverseCore;
     }
 
     public void onEnable() {
@@ -155,6 +161,7 @@ public class HeroChat extends JavaPlugin {
 
         loadPermissions();
         loadCraftIRC();
+        loadMultiverse();
         checkConflict("iChat");
         checkConflict("EssentialsChat");
     }
@@ -241,6 +248,22 @@ public class HeroChat extends JavaPlugin {
                     log(Level.WARNING, "Error encountered while connecting to CraftIRC!");
                     craftIRC = null;
                     craftIRCListener = null;
+                }
+            }
+        }
+    }
+
+    public void loadMultiverse() {
+        Plugin plugin = this.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if (plugin != null) {
+            if (plugin.isEnabled()) {
+                try {
+                    multiverseCore = (MultiverseCore) plugin;
+                    log(Level.INFO, "Multiverse-Core " + multiverseCore.getDescription().getVersion() + " found.");
+                } catch (ClassCastException ex) {
+                    ex.printStackTrace();
+                    log(Level.WARNING, "Error encountered while integrating with MultiverseCore!");
+                    multiverseCore = null;
                 }
             }
         }
