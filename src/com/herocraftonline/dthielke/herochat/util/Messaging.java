@@ -59,6 +59,7 @@ public class Messaging {
             plugin.log(Level.INFO, "Censored \"" + match + "\" for " + sender + "!");
             if (!customReplacement) {
                 char[] replaceChars = new char[match.length()];
+                Arrays.fill(replaceChars, '*');
                 replacement = new String(replaceChars);
             }
             censoredMsg.append(msg.substring(0, matcher.start()) + cencol.str + replacement + chancol.str);
