@@ -59,7 +59,6 @@ public class Messaging {
             plugin.log(Level.INFO, "Censored \"" + match + "\" for " + sender + "!");
             if (!customReplacement) {
                 char[] replaceChars = new char[match.length()];
-                Arrays.fill(replaceChars, '*');
                 replacement = new String(replaceChars);
             }
             censoredMsg.append(msg.substring(0, matcher.start()) + cencol.str + replacement + chancol.str);
@@ -79,6 +78,7 @@ public class Messaging {
         String groupSuffix = "";
         String world = "";
         String healthBar = "";
+        Channel groupChan;
         if (sentByPlayer) {
             try {
                 Player sender = plugin.getServer().getPlayer(senderName);
@@ -87,7 +87,12 @@ public class Messaging {
                     //suffix = plugin.getPermissionManager().getSuffix(sender);
                     group = plugin.getPermissionManager().getGroup(sender);
                     //groupPrefix = plugin.getPermissionManager().getGroupPrefix(sender);
-                    groupPrefix = plugin.getChannelManager().getChannel(group).getNickColor().str;
+                    groupChan = plugin.getChannelManager().getChannel(group);
+                    if (groupChan == null) {
+                        groupPrefix = ChatColor.WHITE.str;
+                    } else {
+                        groupPrefix = groupChan.getNickColor().str;
+                    }
                     //groupSuffix = plugin.getPermissionManager().getGroupSuffix(sender);
                     world = getWorld(sender);
                     senderName = sender.getDisplayName();
