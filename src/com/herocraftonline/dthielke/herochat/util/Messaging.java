@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dthielke.herochat.HeroChat;
 import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 import com.herocraftonline.dthielke.herochat.channels.Channel;
-import com.onarandombox.MultiverseCore.MVWorld;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 
 public class Messaging {
     private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e", "§2" };
@@ -135,7 +135,7 @@ public class Messaging {
 
     private static String getWorld(Player sender) {
         if (HeroChat.getMultiverseCore() != null) {
-            MVWorld world = HeroChat.getMultiverseCore().getMVWorld(sender.getWorld().getName());
+            MultiverseWorld world = HeroChat.getMultiverseCore().getMVWorldManager().getMVWorld(sender.getWorld().getName());
             if(world != null) {
                 return world.getColoredWorldString();
             }
