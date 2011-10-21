@@ -301,11 +301,11 @@ public class HeroChat extends JavaPlugin {
     }
 
     public void log(Level level, String msg) {
-        log.log(level, "[HeroChat] " + msg.replaceAll("§[0-9a-f]", ""));
+        log.log(level, "[HeroChat] " + msg);
     }
 
     public void logChat(String msg) {
-        chatLog.info(msg.replaceAll("§[0-9a-f]", ""));
+        chatLog.info(msg);
     }
 
     public ChannelManager getChannelManager() {
